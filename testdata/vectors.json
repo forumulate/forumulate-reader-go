@@ -1,0 +1,60 @@
+{
+  "description": "Hand-off token vectors. The header segment is fixed; the payload segment must decode to `payload` exactly (key order included); the signature must be HMAC-SHA256 over `<header>.<payload>` keyed with the UTF-8 bytes of `secret`. Other-language ports must reproduce `expectedHeaderSegment` and verify the same way.",
+  "expectedHeaderSegment": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "vectors": [
+    {
+      "name": "minimal",
+      "secret": "s3cret-shared-value",
+      "now": 1793000000000,
+      "user": { "sub": "user_123", "email": "ada@example.com" },
+      "options": {},
+      "payload": {
+        "sub": "user_123",
+        "email": "ada@example.com",
+        "email_verified": true,
+        "iat": 1793000000,
+        "exp": 1793000120
+      }
+    },
+    {
+      "name": "full claims with audience, issuer and suite attributes",
+      "secret": "ünïcode secret — UTF-8 bytes, not base64",
+      "now": 1793000000999,
+      "user": {
+        "sub": "acct_9",
+        "email": "lin@example.com",
+        "name": "Lin",
+        "emailVerified": false,
+        "ext": "merchant:6f1c",
+        "principal": "partner"
+      },
+      "options": { "audience": "docs-client", "issuer": "https://app.example.com", "ttlSec": 300 },
+      "payload": {
+        "sub": "acct_9",
+        "email": "lin@example.com",
+        "name": "Lin",
+        "email_verified": false,
+        "aud": "docs-client",
+        "iss": "https://app.example.com",
+        "ext": "merchant:6f1c",
+        "principal": "partner",
+        "iat": 1793000000,
+        "exp": 1793000300
+      }
+    },
+    {
+      "name": "lifetime is capped at 300 seconds",
+      "secret": "k",
+      "now": 1793000000000,
+      "user": { "sub": "u", "email": "u@example.com" },
+      "options": { "ttlSec": 3600 },
+      "payload": {
+        "sub": "u",
+        "email": "u@example.com",
+        "email_verified": true,
+        "iat": 1793000000,
+        "exp": 1793000300
+      }
+    }
+  ]
+}
